@@ -54,7 +54,7 @@ python -m src.train_models            # trains all 3 models, saves to model/
 python -m src.optimise_thresholds     # recompute accuracy-optimised thresholds
 ```
 
-## Run the web app
+## Run the web app (Flask)
 
 ```bash
 python app.py
@@ -69,6 +69,25 @@ The app provides:
 3. **Batch upload** – submit a CSV; download results with probabilities, per-model verdicts and
    an ensemble (majority-vote) prediction.
 4. **JSON API** – `POST /api/predict` with a JSON customer record.
+
+## Run the web app (Streamlit)
+
+```bash
+pip install -r requirements.txt
+streamlit run streamlit_app.py
+# open http://localhost:8501
+```
+
+### Deploy online with Streamlit Community Cloud (free)
+
+1. Push this repo to GitHub (already at `prabuMessi10/customer-churn-prediction`).
+2. Go to https://share.streamlit.io and **sign in with GitHub** (the account that owns the repo).
+3. Click **Create app** → choose the repo, branch `main`, main file `streamlit_app.py`.
+4. Click **Deploy** — Streamlit installs `requirements.txt`, clones the models and serves the app
+   at a public `*.streamlit.app` URL.
+
+The Streamlit app includes the same four capabilities (dashboard, single prediction, batch upload,
+about) plus live model interpretation.
 
 ## Model performance (hold-out test set)
 
