@@ -18,7 +18,12 @@ instance/
 *.log
 .flaskenv
 
-# Large or generated artifacts (uncomment if you do NOT want them in git)
-# The pre-trained models and dataset ARE committed so the app runs out of the box.
-# model/*.pkl
-# dataset/*.csv
+# Not needed for Streamlit hosting (kept only locally):
+documentation/
+src/
+dataset/
+templates/
+static/
+app.py
+run.bat
+retrain.bat
