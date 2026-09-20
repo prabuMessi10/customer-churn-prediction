@@ -115,9 +115,9 @@ rect(s, Inches(3.9), Inches(4.55), Inches(5.5), Inches(2.4), BG2, shape=MSO_SHAP
 txt(s, Inches(4.0), Inches(4.75), Inches(5.3), Inches(0.5),
     [("PRESENTED BY", 16, True, PRIMARY, 0)], align=PP_ALIGN.CENTER)
 names = [
-    ("SUBASH ACHARYA D", "Roll No. 24CSR___"),
-    ("THANNASI PRABU R", "Roll No. 24CSR___"),
-    ("VIKRAM S", "Roll No. 24CSR___"),
+    ("SUBASH ACHARYA D", "Roll No. 24CSR306"),
+    ("THANNASI PRABU R", "Roll No. 24CSR321"),
+    ("VIKRAM S", "Roll No. 24CSR345"),
 ]
 y = 5.25
 for nm, rn in names:
