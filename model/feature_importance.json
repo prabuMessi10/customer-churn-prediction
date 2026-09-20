@@ -1,0 +1,204 @@
+{
+  "lift_over_baseline": {
+    "linear_regression": 0.0,
+    "random_forest": -0.0049,
+    "xgboost": -0.0207
+  },
+  "per_model": {
+    "linear_regression": {
+      "kind": "coefficient",
+      "top_features": [
+        {
+          "feature": "InternetService_Fiber optic",
+          "value": 0.33244
+        },
+        {
+          "feature": "MonthlyCharges",
+          "value": 0.24826
+        },
+        {
+          "feature": "tenure_log",
+          "value": 0.18599
+        },
+        {
+          "feature": "tenure",
+          "value": 0.16967
+        },
+        {
+          "feature": "TotalCharges",
+          "value": 0.16638
+        },
+        {
+          "feature": "StreamingTV_Yes",
+          "value": 0.1249
+        },
+        {
+          "feature": "StreamingMovies_Yes",
+          "value": 0.12294
+        },
+        {
+          "feature": "Contract_Two year",
+          "value": 0.12168
+        },
+        {
+          "feature": "Contract_One year",
+          "value": 0.09995
+        },
+        {
+          "feature": "MultipleLines_Yes",
+          "value": 0.09975
+        },
+        {
+          "feature": "avg_charge_per_month",
+          "value": 0.09083
+        },
+        {
+          "feature": "PaymentMethod_Electronic check",
+          "value": 0.065
+        },
+        {
+          "feature": "DeviceProtection_Yes",
+          "value": 0.04482
+        },
+        {
+          "feature": "PhoneService",
+          "value": 0.04052
+        },
+        {
+          "feature": "MultipleLines_No phone service",
+          "value": 0.04052
+        }
+      ]
+    },
+    "random_forest": {
+      "kind": "importance",
+      "top_features": [
+        {
+          "feature": "tenure_log",
+          "value": 0.12235
+        },
+        {
+          "feature": "tenure",
+          "value": 0.11859
+        },
+        {
+          "feature": "TotalCharges",
+          "value": 0.10505
+        },
+        {
+          "feature": "avg_charge_per_month",
+          "value": 0.09085
+        },
+        {
+          "feature": "MonthlyCharges",
+          "value": 0.08876
+        },
+        {
+          "feature": "Contract_Two year",
+          "value": 0.08259
+        },
+        {
+          "feature": "InternetService_Fiber optic",
+          "value": 0.05478
+        },
+        {
+          "feature": "PaymentMethod_Electronic check",
+          "value": 0.04274
+        },
+        {
+          "feature": "Contract_One year",
+          "value": 0.03278
+        },
+        {
+          "feature": "TechSupport_Yes",
+          "value": 0.02198
+        },
+        {
+          "feature": "OnlineSecurity_Yes",
+          "value": 0.02189
+        },
+        {
+          "feature": "PaperlessBilling",
+          "value": 0.01594
+        },
+        {
+          "feature": "Dependents",
+          "value": 0.01361
+        },
+        {
+          "feature": "OnlineBackup_Yes",
+          "value": 0.01353
+        },
+        {
+          "feature": "gender",
+          "value": 0.01306
+        }
+      ]
+    },
+    "xgboost": {
+      "kind": "importance",
+      "top_features": [
+        {
+          "feature": "InternetService_Fiber optic",
+          "value": 0.23844
+        },
+        {
+          "feature": "Contract_Two year",
+          "value": 0.15091
+        },
+        {
+          "feature": "DeviceProtection_No internet service",
+          "value": 0.08181
+        },
+        {
+          "feature": "OnlineBackup_No internet service",
+          "value": 0.07533
+        },
+        {
+          "feature": "InternetService_No",
+          "value": 0.06435
+        },
+        {
+          "feature": "Contract_One year",
+          "value": 0.05019
+        },
+        {
+          "feature": "tenure_log",
+          "value": 0.04292
+        },
+        {
+          "feature": "PaymentMethod_Electronic check",
+          "value": 0.02684
+        },
+        {
+          "feature": "tenure",
+          "value": 0.02268
+        },
+        {
+          "feature": "StreamingMovies_Yes",
+          "value": 0.01748
+        },
+        {
+          "feature": "OnlineSecurity_Yes",
+          "value": 0.017
+        },
+        {
+          "feature": "TechSupport_Yes",
+          "value": 0.01683
+        },
+        {
+          "feature": "PhoneService",
+          "value": 0.01669
+        },
+        {
+          "feature": "MultipleLines_No phone service",
+          "value": 0.01436
+        },
+        {
+          "feature": "PaperlessBilling",
+          "value": 0.0136
+        }
+      ]
+    }
+  }
+}

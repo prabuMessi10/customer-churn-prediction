@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Flask / runtime
+instance/
+*.log
+.flaskenv
+
+# Large or generated artifacts (uncomment if you do NOT want them in git)
+# The pre-trained models and dataset ARE committed so the app runs out of the box.
+# model/*.pkl
+# dataset/*.csv

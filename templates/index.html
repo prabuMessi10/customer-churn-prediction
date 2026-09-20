@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telco Customer Churn Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="badges">
+        <span class="badge">Telecom</span>
+        <span class="badge">Banking</span>
+        <span class="badge">OTT / Streaming</span>
+      </div>
+      <h1>Customer Churn Prediction Engine</h1>
+      <p class="subtitle">
+        Predict churn before it happens &middot; Linear Regression &bull; Random Forest &bull; XGBoost
+        &middot; trained on the Telco Customer Churn dataset (7,032 records)
+      </p>
+      <nav class="nav-links">
+        <a href="#dashboard" class="nav-btn">Model Dashboard</a>
+        <a href="#predict" class="nav-btn primary">Try a Prediction</a>
+        <a href="/batch" class="nav-btn">Batch CSV Upload</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===================== MODEL DASHBOARD ===================== -->
+  <section id="dashboard" class="section">
+    <h2 class="section-title">Model Performance Dashboard</h2>
+    <p class="muted">
+      Hold-out test set (1,407 customers). Accuracy target in the problem statement is 85-92%;
+      with this dataset the models reach ~75-80% accuracy while our best model (Random Forest)
+      captures <strong>76% of true churners</strong> (recall). AUC values rank the models for
+      probability-based decisions.
+    </p>
+
+    <div class="metric-table-wrap">
+      <table class="metric-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall (churn)</th>
+            <th>F1 Score</th>
+            <th>ROC AUC</th>
+            <th>Match to Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for name, m in metrics.items() %}
+          <tr>
+            <td><strong>{{ display[name] }}</strong></td>
+            <td>{{ '%.1f'|format(m.accuracy * 100) }}%</td>
+            <td>{{ '%.1f'|format(m.precision * 100) }}%</td>
+            <td>{{ '%.1f'|format(m.recall * 100) }}%</td>
+            <td>{{ '%.2f'|format(m.f1_score) }}</td>
+            <td>{{ '%.3f'|format(m.roc_auc) }}</td>
+            <td>
+              <div class="bar">
+                <div class="bar-fill" style="width: {{ m.accuracy * 100 }}%; background: {{ '#2ecc71' if m.accuracy >= 0.8 else '#f39c12' }};"></div>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cards">
+      {% for name, m in metrics.items() %}
+      <div class="stat-card">
+        <h3>{{ display[name] }}</h3>
+        <div class="big-number">{{ '%.1f'|format(m.accuracy * 100) }}<span>%</span></div>
+        <p class="muted">Accuracy</p>
+        <div class="conf-matrix">
+          {% set cm = m.confusion_matrix %}
+          <div class="cm-cell good">{{ cm[0][0] }}</div>
+          <div class="cm-cell bad">{{ cm[0][1] }}</div>
+          <div class="cm-cell bad">{{ cm[1][0] }}</div>
+          <div class="cm-cell good">{{ cm[1][1] }}</div>
+        </div>
+        <p class="muted small">True TN / FP | FN / TP</p>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ===================== PREDICTION FORM ===================== -->
+  <section id="predict" class="section alternate">
+    <h2 class="section-title">Customer Churn Predictor</h2>
+    <p class="muted">Fill in the customer profile. All three models score it and the results page
+      explains <em>why</em> each model thinks the way it does.</p>
+
+    <form method="POST" action="/predict" class="predict-form">
+      <div class="form-grid">
+        <fieldset>
+          <legend>Customer Profile</legend>
+          <label>Gender
+            <select name="gender">
+              <option value="Female" selected>Female</option>
+              <option value="Male">Male</option>
+            </select>
+          </label>
+          <label>Senior Citizen
+            <select name="SeniorCitizen">
+              <option value="0" selected>No (0)</option>
+              <option value="1">Yes (1)</option>
+            </select>
+          </label>
+          <label>Partner
+            <select name="Partner">
+              <option value="Yes" selected>Yes</option>
+              <option value="No">No</option>
+            </select>
+          </label>
+          <label>Dependents
+            <select name="Dependents">
+              <option value="No" selected>No</option>
+              <option value="Yes">Yes</option>
+            </select>
+          </label>
+          <label>Tenure (months)
+            <input type="number" name="tenure" value="12" min="0" max="72" required>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Services</legend>
+          <label>Phone Service
+            <select name="PhoneService">
+              <option value="Yes" selected>Yes</option>
+              <option value="No">No</option>
+            </select>
+          </label>
+          <label>Multiple Lines
+            <select name="MultipleLines">
+              <option value="No" selected>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No phone service">No phone service</option>
+            </select>
+          </label>
+          <label>Internet Service
+            <select name="InternetService">
+              <option value="Fiber optic" selected>Fiber optic</option>
+              <option value="DSL">DSL</option>
+              <option value="No">No</option>
+            </select>
+          </label>
+          <label>Online Security
+            <select name="OnlineSecurity">
+              <option value="No" selected>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No internet service">No internet service</option>
+            </select>
+          </label>
+          <label>Online Backup
+            <select name="OnlineBackup">
+              <option value="No" selected>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No internet service">No internet service</option>
+            </select>
+          </label>
+          <label>Device Protection
+            <select name="DeviceProtection">
+              <option value="No" selected>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No internet service">No internet service</option>
+            </select>
+          </label>
+          <label>Tech Support
+            <select name="TechSupport">
+              <option value="No" selected>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No internet service">No internet service</option>
+            </select>
+          </label>
+          <label>Streaming TV
+            <select name="StreamingTV">
+              <option value="No" selected>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No internet service">No internet service</option>
+            </select>
+          </label>
+          <label>Streaming Movies
+            <select name="StreamingMovies">
+              <option value="No" selected>No</option>
+              <option value="Yes">Yes</option>
+              <option value="No internet service">No internet service</option>
+            </select>
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Contract &amp; Billing</legend>
+          <label>Contract
+            <select name="Contract">
+              <option value="Month-to-month" selected>Month-to-month</option>
+              <option value="One year">One year</option>
+              <option value="Two year">Two year</option>
+            </select>
+          </label>
+          <label>Paperless Billing
+            <select name="PaperlessBilling">
+              <option value="Yes" selected>Yes</option>
+              <option value="No">No</option>
+            </select>
+          </label>
+          <label>Payment Method
+            <select name="PaymentMethod">
+              <option value="Electronic check" selected>Electronic check</option>
+              <option value="Mailed check">Mailed check</option>
+              <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+              <option value="Credit card (automatic)">Credit card (automatic)</option>
+            </select>
+          </label>
+          <label>Monthly Charges (₹ / $)
+            <input type="number" name="MonthlyCharges" value="65.00" min="0" max="200" step="0.01" required>
+          </label>
+          <label>Total Charges (₹ / $)
+            <input type="number" name="TotalCharges" value="800.00" min="0" step="0.01" required>
+          </label>
+        </fieldset>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Predict Churn Risk</button>
+        <button type="reset" class="btn-ghost">Reset</button>
+      </div>
+    </form>
+  </section>
+
+  <footer>
+    <p>Churn Prediction Project &middot; Linear Regression / Random Forest / XGBoost &middot;
+      Flask + scikit-learn + XGBoost</p>
+  </footer>
+</body>
+</html>

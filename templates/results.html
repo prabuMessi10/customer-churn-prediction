@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prediction Results &middot; Churn Engine</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="results-page">
+  <header class="hero compact">
+    <div class="hero-inner">
+      <h1>Churn Prediction Results</h1>
+      <a href="/" class="nav-btn">&larr; Back to form &amp; dashboard</a>
+    </div>
+  </header>
+
+  <section class="section">
+    <h2 class="section-title">Customer Being Scored</h2>
+    <div class="input-chips">
+      <span class="chip"><b>Tenure</b> {{ input.tenure }} mo</span>
+      <span class="chip"><b>Contract</b> {{ input.Contract }}</span>
+      <span class="chip"><b>Internet</b> {{ input.InternetService }}</span>
+      <span class="chip"><b>Payment</b> {{ input.PaymentMethod }}</span>
+      <span class="chip"><b>Monthly</b> {{ '%.2f'|format(input.MonthlyCharges) }}</span>
+      <span class="chip"><b>Total</b> {{ '%.2f'|format(input.TotalCharges) }}</span>
+    </div>
+  </section>
+
+  <section class="section alternate">
+    <h2 class="section-title">Model Verdicts</h2>
+    <div class="verdict-cards">
+      {% for r in results %}
+      <div class="verdict-card {% if r.model == best.model %}is-best{% endif %}">
+        <div class="verdict-head">
+          <h3>{{ r.display }}</h3>
+          {% if r.model == best.model %}<span class="tag-best">Best by AUC</span>{% endif %}
+        </div>
+        <div class="verdict-badge {{ r.prediction|lower|replace(' ', '-') }}">
+          {{ r.prediction }}
+        </div>
+        <p class="risk-label">Risk: <strong>{{ r.risk }}</strong></p>
+        <div class="prob-bar">
+          <div class="prob-fill" style="width: {{ r.churn_percent }}%;"></div>
+        </div>
+        <div class="prob-row">
+          <span>Churn probability</span>
+          <span class="prob-value">{{ r.churn_percent }}%</span>
+        </div>
+        <p class="muted small">Decision threshold: {{ '%.2f'|format(r.threshold) }}</p>
+        <div class="mini-metrics">
+          <span>Acc {{ '%.0f'|format(r.metrics.accuracy * 100) }}%</span>
+          <span>F1 {{ '%.2f'|format(r.metrics.f1_score) }}</span>
+          <span>AUC {{ '%.3f'|format(r.metrics.roc_auc) }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="consensus">
+      {% set churn_votes = results | selectattr('prediction', 'equalto', 'Churn') | list %}
+      {% if churn_votes | length >= 2 %}
+        <p class="consensus-high"><strong>{{ churn_votes | length }} of 3 models flag churn risk.</strong>
+          This customer is highly likely to churn &mdash; act now (retention offer, plan change, support outreach).</p>
+      {% elif churn_votes | length == 1 %}
+        <p class="consensus-mid"><strong>1 of 3 models flags churn risk.</strong> Monitor this customer closely &mdash; review billing, contract and service satisfaction.</p>
+      {% else %}
+        <p class="consensus-low"><strong>No model flags churn risk.</strong> This customer shows strong retention signals &mdash; ideally, reinforce with loyalty perks.</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Why? &mdash; Interpretation</h2>
+    <div class="explain-grid">
+      <div class="explain-card">
+        <h3>Linear Regression &mdash; Local Drivers</h3>
+        <p class="muted small">Per-feature contribution to this customer's churn score.</p>
+        {% set lr_exp = explanation.linear_regression %}
+        {% if lr_exp %}
+        <ol class="driver-list">
+          {% for d in lr_exp %}
+          <li class="{% if d.value > 0 %}push{% else %}pull{% endif %}">
+            <span class="driver-name">{{ d.feature }}</span>
+            <span class="driver-val">{{ '%+.3f'|format(d.value) }}</span>
+          </li>
+          {% endfor %}
+        </ol>
+        <p class="muted small">Positive values push <em>toward churn</em>, negative values <em>retain</em>.</p>
+        {% else %}
+        <p class="muted">No significant contributors.</p>
+        {% endif %}
+      </div>
+
+      <div class="explain-card">
+        <h3>Tree Models &mdash; Top Global Drivers</h3>
+        <p class="muted small">Most important features the models rely on across all customers.</p>
+        <div class="driver-grid">
+          <div>
+            <h4>Random Forest</h4>
+            <ol class="driver-list">
+              {% for d in explanation.random_forest %}
+              <li class="push"><span class="driver-name">{{ d.feature }}</span><span class="driver-val">{{ '%.3f'|format(d.value) }}</span></li>
+              {% endfor %}
+            </ol>
+          </div>
+          <div>
+            <h4>XGBoost</h4>
+            <ol class="driver-list">
+              {% for d in explanation.xgboost %}
+              <li class="push"><span class="driver-name">{{ d.feature }}</span><span class="driver-val">{{ '%.3f'|format(d.value) }}</span></li>
+              {% endfor %}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <a href="/" class="footer-link">&larr; New prediction</a>
+    <span>&middot; Churn Prediction Project &middot;</span>
+    <a href="/batch" class="footer-link">Batch CSV upload &rarr;</a>
+  </footer>
+</body>
+</html>

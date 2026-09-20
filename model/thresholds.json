@@ -1,0 +1,23 @@
+{
+  "linear_regression": {
+    "threshold": 0.5,
+    "acc": 0.7982,
+    "f1": 0.5657,
+    "auc": 0.8374,
+    "has_probability": false
+  },
+  "random_forest": {
+    "threshold": 0.7,
+    "acc": 0.796,
+    "f1": 0.5658,
+    "auc": 0.8325,
+    "has_probability": true
+  },
+  "xgboost": {
+    "threshold": 0.675,
+    "acc": 0.7825,
+    "f1": 0.4917,
+    "auc": 0.8167,
+    "has_probability": true
+  }
+}
