@@ -1,7 +1,12 @@
 # Customer Churn Prediction - Full-Stack ML Project
 
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://customer-churn-prediction-on.streamlit.app)
+
+**🔗 Live demo: https://customer-churn-prediction-on.streamlit.app** (Streamlit · hosted on Streamlit Community Cloud)
+
 Predict customer churn for subscription businesses (telecom / banking / OTT) using
-**Linear Regression**, **Random Forest** and **XGBoost**, served through a Flask web app.
+**Linear Regression**, **Random Forest** and **XGBoost**, served through a Flask web app
+and a deployed Streamlit dashboard.
 
 ## Problem addressed
 
@@ -79,6 +84,10 @@ streamlit run streamlit_app.py
 ```
 
 ### Deploy online with Streamlit Community Cloud (free)
+
+The app is already deployed: **https://customer-churn-prediction-on.streamlit.app**
+
+To redeploy or deploy a fork:
 
 1. Push this repo to GitHub (already at `prabuMessi10/customer-churn-prediction`).
 2. Go to https://share.streamlit.io and **sign in with GitHub** (the account that owns the repo).
