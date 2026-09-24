@@ -1,6 +1,10 @@
-pandas>=2.2
-numpy>=1.26
-scikit-learn>=1.4
-xgboost>=2.0
-joblib>=1.4
+# Pinned to the exact versions used to train and pickle the models in model/.
+# The .pkl pipelines store module paths (sklearn / xgboost / src.preprocess),
+# so the deployed environment must install the same library versions.
+# All pinned versions below install cleanly on Python 3.12+ (incl. 3.14).
+numpy==2.4.4
+pandas==3.0.3
+scikit-learn==1.9.0
+xgboost==3.4.1
+joblib==1.5.3
 streamlit>=1.57

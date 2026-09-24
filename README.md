@@ -33,11 +33,21 @@ customer-churn-prediction/
 │   ├── feature_importance.json  # top churn drivers per model
 │   ├── thresholds.json          # accuracy-optimised decision thresholds
 │   └── feature_columns.json     # schema for the prediction form
+├── src/
+│   ├── __init__.py
+│   └── preprocess.py            # RUNTIME dependency — the saved model
+│                                # pipelines reference src.preprocess.clean_data
+│                                # and need it to unpickle (do not remove)
 ├── .gitignore
-├── requirements.txt
+├── requirements.txt             # versions pinned to match the trained models
+├── keep_alive.py                # optional local pinger (every 3 min)
 ├── streamlit_app.py             # Streamlit entry point (4 pages)
 └── README.md
 ```
+
+> ⚠️ **Do not remove `src/preprocess.py`.** The model pipelines in `model/*.pkl`
+> were pickled with a reference to `src.preprocess.clean_data`; without that
+> module the app fails at startup with `ModuleNotFoundError`.
 
 ## The Streamlit app
 
@@ -70,6 +80,19 @@ To redeploy or deploy a fork:
 3. Click **Create app** → choose the repo, branch `main`, main file `streamlit_app.py`.
 4. Click **Deploy** — Streamlit installs `requirements.txt`, clones the models and serves
    the app at a public `*.streamlit.app` URL. Every push to `main` auto-redeploys.
+
+## Keep the app awake
+
+Free-tier Streamlit apps sleep after inactivity. The simplest way to keep the
+app warm:
+
+- **Local (every 3 minutes):** run `python keep_alive.py` on any always-on machine.
+  It pings the app URL once every 3 minutes.
+
+> Optional: a GitHub Actions workflow (`.github/workflows/keep_alive.yml`,
+> pings every 5 minutes — GitHub's minimum) is included in the workspace. Pushing
+> it requires a token with the `workflow` scope (`gh auth refresh -h github.com -s workflow`),
+> or you can add it through the GitHub web UI.
 
 ## Model performance (hold-out test set)
 

@@ -20,10 +20,16 @@ instance/
 
 # Not needed for Streamlit hosting (kept only locally):
 documentation/
-src/
 dataset/
 templates/
 static/
 app.py
 run.bat
 retrain.bat
+
+# Training scripts (not needed at runtime).
+# NOTE: src/preprocess.py and src/__init__.py ARE tracked — the saved model
+# pipelines reference src.preprocess.clean_data and need it to unpickle.
+src/train_models.py
+src/tune_models.py
+src/optimise_thresholds.py
